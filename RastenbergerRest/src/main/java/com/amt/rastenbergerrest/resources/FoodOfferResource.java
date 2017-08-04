@@ -1,14 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.amt.rastenbergerrest.resources;
 
-/**
- *
- * @author aweiss
- */
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+
+@Path("foodoffers")
 public class FoodOfferResource {
+    
+    @GET
+    public String getResource () {
+     
+        return "Test";
+    }
     
 }

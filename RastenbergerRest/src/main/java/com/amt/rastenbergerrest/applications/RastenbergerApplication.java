@@ -1,0 +1,21 @@
+package com.amt.rastenbergerrest.applications;
+
+import com.amt.rastenbergerrest.resources.FoodOfferResource;
+import java.util.Set;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+
+@ApplicationPath("rs")
+public class RastenbergerApplication extends Application {
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        final Set<Class<?>> classes = super.getClasses();
+        classes.add(FoodOfferResource.class);
+        
+        return classes;
+    }
+    
+    
+    
+}
