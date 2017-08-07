@@ -8,7 +8,32 @@ public class FoodOffer {
     private String owner;
     private String externalLink;
     private String description;
+    private Long id;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public FoodOffer(String owner, String externalLink, String description, Long id) {
+        this.owner = owner;
+        this.externalLink = externalLink;
+        this.description = description;
+        this.id = id;
+    }
+
+    public FoodOffer(String owner, String externalLink, String description) {
+        this.owner = owner;
+        this.externalLink = externalLink;
+        this.description = description;
+    }
+   
+    public FoodOffer() {
+    }
+    
     public String getOwner() {
         return owner;
     }
