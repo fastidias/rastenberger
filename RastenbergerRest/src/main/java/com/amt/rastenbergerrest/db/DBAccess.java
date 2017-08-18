@@ -46,11 +46,28 @@ public class DBAccess {
         return index;
     }
    
-   public FoodOffer updateFoodOffer(Long index, FoodOffer foodOffer) {
+   public FoodOffer updateFoodOffer(FoodOffer foodOffer,Long id) {
        
-       // TODO
+       FoodOffer oldFoodOffer = getFoodOfferByID(id);
+       
+       oldFoodOffer.setDescription(foodOffer.getDescription());
+       oldFoodOffer.setExternalLink(foodOffer.getExternalLink());
+       oldFoodOffer.setOwner(foodOffer.getOwner());
        
        return foodOffer;
+   }
+   
+   public FoodOffer getFoodOfferByID(final Long id) {
+       for (FoodOffer foodOffer : getFoodOffers()) {
+           if (foodOffer.getId().equals(id)) {
+               return foodOffer;
+           }        
+       }    
+       throw new RuntimeException("FooderOffer not found");
+   }
+   
+   public void deleteFoodOfferByID(final Long id) {
+       FOOD_OFFERS.remove(getFoodOfferByID(id));
    }
    
 }

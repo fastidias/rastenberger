@@ -1,5 +1,6 @@
 package com.amt.rastenbergerrest.models;
 
+import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -57,5 +58,37 @@ public class FoodOffer {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.owner);
+        hash = 29 * hash + Objects.hashCode(this.externalLink);
+        hash = 29 * hash + Objects.hashCode(this.description);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FoodOffer other = (FoodOffer) obj;
+        if (!Objects.equals(this.owner, other.owner)) {
+            return false;
+        }
+        if (!Objects.equals(this.externalLink, other.externalLink)) {
+            return false;
+        }
+        return Objects.equals(this.description, other.description);
+    }
+    
+    
 
 }
