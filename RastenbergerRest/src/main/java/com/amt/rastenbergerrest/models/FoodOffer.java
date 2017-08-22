@@ -1,5 +1,7 @@
 package com.amt.rastenbergerrest.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,41 +11,21 @@ public class FoodOffer {
     private String owner;
     private String externalLink;
     private String description;
-    private Long id;
-    private Links links;
+    private Integer id;
+    private List<Link> links;
 
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public FoodOffer(String owner, String externalLink, String description, Long id) {
+    public FoodOffer(String owner, String externalLink, String description, Integer id) {
         this.owner = owner;
         this.externalLink = externalLink;
         this.description = description;
         this.id = id;
+        links = new ArrayList<>();
     }
 
-    public FoodOffer(String owner, String externalLink, String description) {
-        this.owner = owner;
-        this.externalLink = externalLink;
-        this.description = description;
-    }
-   
     public FoodOffer() {
+        links = new ArrayList<>();
     }
-    
+
     public String getOwner() {
         return owner;
     }
@@ -66,6 +48,26 @@ public class FoodOffer {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+  
+    public void addLink(String uri, String relation) {
+        links.add(new Link(uri, relation));
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override
@@ -97,7 +99,5 @@ public class FoodOffer {
         }
         return Objects.equals(this.description, other.description);
     }
-    
-    
 
 }

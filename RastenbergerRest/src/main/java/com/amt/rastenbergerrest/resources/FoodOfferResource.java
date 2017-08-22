@@ -2,7 +2,6 @@ package com.amt.rastenbergerrest.resources;
 
 import com.amt.rastenbergerrest.db.DBAccess;
 import com.amt.rastenbergerrest.models.FoodOffer;
-import com.amt.rastenbergerrest.models.Links;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -12,6 +11,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
@@ -19,46 +19,65 @@ import javax.ws.rs.core.UriInfo;
 @Path("foodoffers")
 @Produces(MediaType.APPLICATION_JSON)
 public class FoodOfferResource {
+
     // For methods as additionl params there are @QueryParams("foodOfferTest")
     private final DBAccess dba = new DBAccess();
-            
-    @GET
-    public List<FoodOffer> getFoodOffers() {
 
-        return dba.getFoodOffers();
+    @GET
+    public List<FoodOffer> getFoodOffers(@Context UriInfo uriinfo, @QueryParam("startIndex") Integer startIndex, @QueryParam("endIndex") Integer endIndex) {
+        if (startIndex == null) {
+            startIndex = 0;
+        }
+        if (endIndex == null) {
+            endIndex = dba.getFoodOffers().size();
+        }
+
+        List<FoodOffer> foodOffers = this.addSelfLink(dba.getFoodOffers(), uriinfo);
+
+        return foodOffers.subList(startIndex, endIndex);
+
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public FoodOffer createFoodOffer(final FoodOffer foodOffer) {
-        
-        dba.addFoodOffer(foodOffer);
-        return foodOffer; 
+    public FoodOffer createFoodOffer(@Context UriInfo uriinfo, final FoodOffer foodOffer) {
+
+        return this.addSelfLink(dba.addFoodOffer(foodOffer), uriinfo);
     }
 
     @GET
     @Path("{id}")
-    public FoodOffer getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
-        
-        FoodOffer foodOffer = dba.getFoodOfferByID(id);
-        Links links = new Links(uriinfo.getBaseUriBuilder().path(getClass()).path(Long.toString(id)).build().toString());
-        foodOffer.setLinks(links);
-        
-        return dba.getFoodOfferByID(id);
+    public FoodOffer getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Integer id) {
+
+        return this.addSelfLink(dba.getFoodOfferByID(id), uriinfo);
     }
-        
+
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public FoodOffer updateFoodOffer(@PathParam("id") Long id, final FoodOffer foodOffer) {
-        
-        return dba.updateFoodOffer(foodOffer,id);
+    public FoodOffer updateFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Integer id, final FoodOffer foodOffer) {
+
+        return this.addSelfLink(dba.updateFoodOffer(foodOffer, id), uriinfo);
     }
-    
+
     @DELETE
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void deleteFoodOffer (@PathParam("id") Long id) {
-        dba.deleteFoodOfferByID(id);    
+    public void deleteFoodOffer(@PathParam("id") Integer id) {
+        dba.deleteFoodOfferByID(id);
+    }
+
+    private List<FoodOffer> addSelfLink(List<FoodOffer> foodOffers, UriInfo uriinfo) {
+        foodOffers.forEach((foodOffer) -> {
+            this.addSelfLink(foodOffer, uriinfo);
+        });
+        
+        return foodOffers;
+    }
+    
+   private FoodOffer addSelfLink(FoodOffer foodOffer, UriInfo uriinfo) {
+       
+        foodOffer.addLink(uriinfo.getBaseUriBuilder().path(getClass()).path(Long.toString(foodOffer.getId())).build().toString(), "self");
+        return foodOffer;
     }
 }
