@@ -10,6 +10,15 @@ public class FoodOffer {
     private String externalLink;
     private String description;
     private Long id;
+    private Links links;
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public void setLinks(Links links) {
+        this.links = links;
+    }
 
     public Long getId() {
         return id;

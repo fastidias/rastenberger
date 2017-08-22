@@ -18,7 +18,10 @@ import org.json.JSONObject;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import static org.hamcrest.Matchers.*;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FoodOfferResourceIT {
 
     public FoodOfferResourceIT() {
@@ -46,19 +49,25 @@ public class FoodOfferResourceIT {
     @org.junit.Test
     public void testCreateFoodOffer() {
         System.out.println("createFoodOffer");
+        
         JSONObject data = new JSONObject()
                 .put("owner", "towbee")
                 .put("description", "test mich")
                 .put("externalLink", "http://google.de");
 
-        given().contentType(ContentType.JSON)
+        String response = given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .body(data.toString())
                 .post("http://localhost:8080/RastenbergerRest/rs/foodoffers")
                 .then().statusCode(HttpStatus.SC_OK)
                         .body("owner",equalTo("towbee"))
                         .body("description",equalTo("test mich"))
-                        .body("externalLink",equalTo("http://google.de"));
+                        .body("externalLink",equalTo("http://google.de"))
+                .extract().asString();
+        
+        JSONObject jsonRespone = new JSONObject(response);
+        System.out.println(jsonRespone.get("id"));
+        
     }
 
     /**
