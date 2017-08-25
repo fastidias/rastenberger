@@ -1,20 +1,34 @@
 package com.amt.rastenbergerrest.models;
 
+import com.amt.rastenbergerrest.db.FoodOfferEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class FoodOffer {
 
+    private static final String PERSISTENCE_UNIT_NAME = "com.amt_RastenbergerRest_war_0.1PU";
+    private EntityManagerFactory factory;
     private String owner;
     private String externalLink;
     private String description;
-    private Integer id;
+    private Long id;
     private List<Link> links;
 
-    public FoodOffer(String owner, String externalLink, String description, Integer id) {
+    public FoodOffer(FoodOfferEntity foodOffer) {
+        this(
+                foodOffer.getOwner(),
+                foodOffer.getExternalLink(),
+                foodOffer.getDescription(),
+                foodOffer.getId());
+    }
+    
+    public FoodOffer(String owner, String externalLink, String description, Long id) {
         this.owner = owner;
         this.externalLink = externalLink;
         this.description = description;
@@ -62,11 +76,11 @@ public class FoodOffer {
         links.add(new Link(uri, relation));
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -99,5 +113,20 @@ public class FoodOffer {
         }
         return Objects.equals(this.description, other.description);
     }
+    
+    public FoodOffer saveToDatabase() {
+        FoodOfferEntity foodOfferEntity = new FoodOfferEntity(this);
+        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManager em = factory.createEntityManager();
+        
+        em.getTransaction().begin();
+        em.persist(foodOfferEntity);
+        em.getTransaction().commit();
+        em.close();
+        
+        this.setId(foodOfferEntity.getId());
+        
+        return this;
+    } 
 
 }
