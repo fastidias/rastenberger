@@ -13,19 +13,39 @@ public class FoodOfferService {
 
     private static final String PERSISTENCE_UNIT_NAME = "com.amt_RastenbergerRest_war_0.1PU";
     private EntityManagerFactory factory;
-    
+
     public List<FoodOffer> getFoodOffers() {
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager em = factory.createEntityManager();
-        
+
         Query query = em.createQuery("SELECT e FROM FoodOfferEntity e");
         List<FoodOfferEntity> foodOffersEntities = query.getResultList();
         em.close();
-        
+
         return foodOffersEntities
                 .stream()
                 .map(entity -> new FoodOffer(entity))
                 .collect(Collectors.toList());
     }
     
+    public FoodOffer getFoodOfferById(final Long id) {
+        return getFoodOffers()
+                .stream()
+                .findFirst()
+                .filter(foodOffer -> foodOffer.getId().equals(id))
+                .get();
+    }
+
+    public FoodOffer deleteFoodOffer(final FoodOffer foodOffer) {
+        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManager em = factory.createEntityManager();
+
+        em.getTransaction().begin();
+        em.remove(new FoodOfferEntity(foodOffer));
+        em.getTransaction().commit();
+        em.close();
+
+        return foodOffer;
+    }
+
 }

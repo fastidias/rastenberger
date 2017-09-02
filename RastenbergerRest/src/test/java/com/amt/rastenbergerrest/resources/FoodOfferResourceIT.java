@@ -3,46 +3,44 @@ package com.amt.rastenbergerrest.resources;
 import static org.junit.Assert.*;
 import static io.restassured.RestAssured.*;
 import io.restassured.http.ContentType;
-import org.json.JSONObject;
+import io.restassured.response.Response;
+import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObject;
 import org.apache.http.HttpStatus;
 import static org.hamcrest.Matchers.*;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FoodOfferResourceIT {
 
-    /**
-     * Test of createFoodOffer method, of class FoodOfferResource.
-     */
-    @org.junit.Test
-    public void testCreateFoodOffer() {
-        System.out.println("createFoodOffer");
-        
-        JSONObject data = new JSONObject()
-                .put("owner", "towbee")
-                .put("description", "test mich")
-                .put("externalLink", "http://google.de");
+    private final String webapiPath = "http://localhost:8080/RastenbergerRest/rs";
+    private final JsonObject testFoodOffer = Json.createObjectBuilder()
+            .add("owner", "Moe Szyslak")
+            .add("externalLink", "www.google.de")
+            .add("description", "French Duff - Düff")
+            .build();
 
-        String response = given().contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .body(data.toString())
-                .post("http://localhost:8080/RastenbergerRest/rs/foodoffers")
-                .then().statusCode(HttpStatus.SC_OK)
-                        .body("owner",equalTo("towbee"))
-                        .body("description",equalTo("test mich"))
-                        .body("externalLink",equalTo("http://google.de"))
-                .extract().asString();
-        
-        JSONObject jsonRespone = new JSONObject(response);
-        System.out.println(jsonRespone.get("id"));
-        
+    @Before
+    public void setUp() {
+        final Response foodOffers = get(webapiPath + "/foodoffers");
+        foodOffers.then().statusCode(HttpStatus.SC_OK);
+        final List<Integer> foodOfferIds = foodOffers
+                .body()
+                .jsonPath()
+                .getList("id");
+
+        foodOfferIds.stream().forEach(id -> {
+            delete(webapiPath + "/foodoffers/" + id)
+                    .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
+        });
     }
 
-    /**
-     * Test of getFoodOffers method, of class FoodOfferResource.
-     */
-    @org.junit.Test
+    @Test
     public void testGetFoodOffers() {
         System.out.println("getFoodOffers");
         get("http://localhost:8080/RastenbergerRest/rs/foodoffers")
@@ -50,31 +48,37 @@ public class FoodOfferResourceIT {
                 .statusCode(HttpStatus.SC_OK);
     }
 
-    /**
-     * Test of getFoodOffer method, of class FoodOfferResource.
-     */
-    @org.junit.Test
+    @Test
     public void testGetFoodOffer() {
-        System.out.println("getFoodOffer");
-        fail("The test case is a prototype.");
+        final Long foodOfferId = createFoodOffer(testFoodOffer);
+
+        System.out.println(webapiPath + "/foodoffers/" + foodOfferId);
+        get(webapiPath + "/foodoffers/" + foodOfferId)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("owner", equalTo(testFoodOffer.getString("owner")))
+                .body("externalLink", equalTo(testFoodOffer.getString("externalLink")))
+                .body("description", equalTo(testFoodOffer.getString("description")))
+                .body("links", anything());
     }
 
-    /**
-     * Test of updateFoodOffer method, of class FoodOfferResource.
-     */
-    @org.junit.Test
-    public void testUpdateFoodOffer() {
-        System.out.println("updateFoodOffer");
-        fail("The test case is a prototype.");
+    @Test
+    public void testCreateFoodOffer() {
+        System.out.println("createFoodOffer");
+
+
     }
 
-    /**
-     * Test of deleteFoodOffer method, of class FoodOfferResource.
-     */
-    @org.junit.Test
-    public void testDeleteFoodOffer() {
-        System.out.println("deleteFoodOffer");
-        fail("The test case is a prototype.");
+    private Long createFoodOffer(JsonObject foodOffer) {
+        final Response createResponse = given()
+                .contentType(ContentType.JSON)
+                .body(foodOffer.toString())
+                .post(webapiPath + "/foodoffers");
+
+        createResponse.then().statusCode(HttpStatus.SC_CREATED);
+
+        final Integer foodOfferId = createResponse.body().jsonPath().get("id");
+        return new Long(foodOfferId);
     }
 
 }
