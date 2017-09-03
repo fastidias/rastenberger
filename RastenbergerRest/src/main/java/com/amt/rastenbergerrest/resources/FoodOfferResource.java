@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -35,7 +36,7 @@ public class FoodOfferResource {
 
         foodOffer.saveToDatabase();
         this.addSelfLink(foodOffer, uriinfo);
-        
+
         final URI addedUri = uriinfo
                 .getAbsolutePathBuilder()
                 .path(Long.toString(foodOffer.getId()))
@@ -53,13 +54,17 @@ public class FoodOfferResource {
         return this.addSelfLink(matchingFoodOffer, uriinfo);
     }
 
-//    @PUT
-//    @Path("{id}")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public FoodOffer updateFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id, final FoodOffer foodOffer) {
-//
-//        return this.addSelfLink(dba.updateFoodOffer(foodOffer, id), uriinfo);
-//    }
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public FoodOffer updateFoodOffer(
+            @Context UriInfo uriinfo,
+            @PathParam("id") Long id,
+            final FoodOffer foodOffer) {
+        foodOffer.setId(id);
+        final FoodOfferService service = new FoodOfferService();
+        return service.updateFoodOffer(foodOffer);
+    }
 
     @DELETE
     @Path("{id}")
@@ -67,10 +72,10 @@ public class FoodOfferResource {
     public void deleteFoodOffer(@PathParam("id") Long id) {
         final FoodOfferService service = new FoodOfferService();
         final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
-        
+
         service.deleteFoodOffer(matchingFoodOffer);
     }
-    
+
     private List<FoodOffer> addSelfLink(List<FoodOffer> foodOffers, UriInfo uriinfo) {
         foodOffers.forEach((foodOffer) -> {
             this.addSelfLink(foodOffer, uriinfo);
@@ -84,5 +89,5 @@ public class FoodOfferResource {
         foodOffer.addLink(uriinfo.getBaseUriBuilder().path(getClass()).path(Long.toString(foodOffer.getId())).build().toString(), "self");
         return foodOffer;
     }
-    
+
 }

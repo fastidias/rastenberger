@@ -36,6 +36,26 @@ public class FoodOfferService {
                 .get();
     }
 
+    public FoodOffer updateFoodOffer(final FoodOffer foodOffer) {
+        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManager em = factory.createEntityManager();
+
+        final FoodOfferEntity entity = em.find(
+                FoodOfferEntity.class,
+                foodOffer.getId());
+
+        entity.setOwner(foodOffer.getOwner());
+        entity.setDescription(foodOffer.getDescription());
+        entity.setExternalLink(foodOffer.getExternalLink());
+
+        em.getTransaction().begin();
+        em.persist(entity);
+        em.getTransaction().commit();
+        em.close();
+
+        return foodOffer;
+    }
+
     public FoodOffer deleteFoodOffer(final FoodOffer foodOffer) {
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager em = factory.createEntityManager();
