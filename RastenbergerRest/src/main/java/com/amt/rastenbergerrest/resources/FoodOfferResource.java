@@ -4,6 +4,7 @@ import com.amt.rastenbergerrest.models.FoodOffer;
 import com.amt.rastenbergerrest.service.FoodOfferService;
 import java.net.URI;
 import java.util.List;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -21,10 +22,12 @@ import javax.ws.rs.core.UriInfo;
 @Produces(MediaType.APPLICATION_JSON)
 public class FoodOfferResource {
 
+    @Inject
+    private FoodOfferService service;
+
     // For methods as additional params there are @QueryParams("foodOfferTest")
     @GET
     public List<FoodOffer> getFoodOffers(@Context UriInfo uriinfo) {
-        FoodOfferService service = new FoodOfferService();
         List<FoodOffer> foodOffers = this.addSelfLink(service.getFoodOffers(), uriinfo);
 
         return foodOffers;
@@ -48,7 +51,6 @@ public class FoodOfferResource {
     @GET
     @Path("{id}")
     public FoodOffer getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
-        final FoodOfferService service = new FoodOfferService();
         final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
 
         return this.addSelfLink(matchingFoodOffer, uriinfo);
@@ -62,7 +64,6 @@ public class FoodOfferResource {
             @PathParam("id") Long id,
             final FoodOffer foodOffer) {
         foodOffer.setId(id);
-        final FoodOfferService service = new FoodOfferService();
         return service.updateFoodOffer(foodOffer);
     }
 
@@ -70,7 +71,6 @@ public class FoodOfferResource {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void deleteFoodOffer(@PathParam("id") Long id) {
-        final FoodOfferService service = new FoodOfferService();
         final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
 
         service.deleteFoodOffer(matchingFoodOffer);
