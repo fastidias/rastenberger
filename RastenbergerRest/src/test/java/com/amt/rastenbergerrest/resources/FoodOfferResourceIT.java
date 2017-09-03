@@ -1,6 +1,5 @@
 package com.amt.rastenbergerrest.resources;
 
-import static org.junit.Assert.*;
 import static io.restassured.RestAssured.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -20,7 +19,7 @@ public class FoodOfferResourceIT {
     private final String webapiPath = "http://localhost:8080/RastenbergerRest/rs";
     private final JsonObject testFoodOffer = Json.createObjectBuilder()
             .add("owner", "Moe Szyslak")
-            .add("externalLink", "www.google.de")
+            .add("externalLink", "https://www.google.de")
             .add("description", "French Duff - Düff")
             .build();
 
@@ -43,16 +42,18 @@ public class FoodOfferResourceIT {
     @Test
     public void testGetFoodOffers() {
         System.out.println("getFoodOffers");
-        get("http://localhost:8080/RastenbergerRest/rs/foodoffers")
+
+        get(webapiPath + "/foodoffers")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void testGetFoodOffer() {
+        System.out.println("getFoodOffer");
+
         final Long foodOfferId = createFoodOffer(testFoodOffer);
 
-        System.out.println(webapiPath + "/foodoffers/" + foodOfferId);
         get(webapiPath + "/foodoffers/" + foodOfferId)
                 .then()
                 .statusCode(HttpStatus.SC_OK)
@@ -66,7 +67,22 @@ public class FoodOfferResourceIT {
     public void testCreateFoodOffer() {
         System.out.println("createFoodOffer");
 
+        final JsonObject pizzaOffer = Json.createObjectBuilder()
+                .add("owner", "Homer J. Simpson")
+                .add("externalLink", "https://www.hallopizza.de/")
+                .add("description", "Mmmmhhh ... pizza")
+                .build();
 
+        given()
+                .contentType(ContentType.JSON)
+                .body(pizzaOffer.toString())
+                .post(webapiPath + "/foodoffers")
+                .then()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("owner", equalTo(pizzaOffer.getString("owner")))
+                .body("externalLink", equalTo(pizzaOffer.getString("externalLink")))
+                .body("description", equalTo(pizzaOffer.getString("description")))
+                .body("links", anything());
     }
 
     private Long createFoodOffer(JsonObject foodOffer) {
