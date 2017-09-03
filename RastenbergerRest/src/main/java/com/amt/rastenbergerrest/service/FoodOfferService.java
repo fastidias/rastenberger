@@ -27,7 +27,7 @@ public class FoodOfferService {
                 .map(entity -> new FoodOffer(entity))
                 .collect(Collectors.toList());
     }
-    
+
     public FoodOffer getFoodOfferById(final Long id) {
         return getFoodOffers()
                 .stream()
@@ -40,8 +40,12 @@ public class FoodOfferService {
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         EntityManager em = factory.createEntityManager();
 
+        final FoodOfferEntity entity = em.find(
+                FoodOfferEntity.class,
+                foodOffer.getId());
+
         em.getTransaction().begin();
-        em.remove(new FoodOfferEntity(foodOffer));
+        em.remove(entity);
         em.getTransaction().commit();
         em.close();
 
