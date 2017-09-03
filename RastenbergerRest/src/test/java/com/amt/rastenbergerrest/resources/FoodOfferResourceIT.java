@@ -85,6 +85,28 @@ public class FoodOfferResourceIT {
                 .body("links", anything());
     }
 
+    @Test
+    public void testUpdateFoodOffer() {
+        System.out.println("updateFoodOffer");
+
+        final Long foodOfferId = createFoodOffer(testFoodOffer);
+        final JsonObject updateFoodOffer = Json
+                .createObjectBuilder(testFoodOffer)
+                .add("owner", "Bart Simpson")
+                .build();
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(updateFoodOffer.toString())
+                .put(webapiPath + "/foodoffers/" + foodOfferId)
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("owner", equalTo(updateFoodOffer.getString("owner")))
+                .body("externalLink", equalTo(updateFoodOffer.getString("externalLink")))
+                .body("description", equalTo(updateFoodOffer.getString("description")))
+                .body("links", anything());
+    }
+
     private Long createFoodOffer(JsonObject foodOffer) {
         final Response createResponse = given()
                 .contentType(ContentType.JSON)
