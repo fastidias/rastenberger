@@ -4,16 +4,11 @@ import com.amt.rastenbergerrest.db.FoodOfferEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class FoodOffer {
 
-    private static final String PERSISTENCE_UNIT_NAME = "com.amt_RastenbergerRest_war_0.1PU";
-    private EntityManagerFactory factory;
     private String owner;
     private String externalLink;
     private String description;
@@ -33,10 +28,6 @@ public class FoodOffer {
         this.externalLink = externalLink;
         this.description = description;
         this.id = id;
-        links = new ArrayList<>();
-    }
-
-    public FoodOffer() {
         links = new ArrayList<>();
     }
 
@@ -113,20 +104,5 @@ public class FoodOffer {
         }
         return Objects.equals(this.description, other.description);
     }
-    
-    public FoodOffer saveToDatabase() {
-        FoodOfferEntity foodOfferEntity = new FoodOfferEntity(this);
-        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-        EntityManager em = factory.createEntityManager();
-        
-        em.getTransaction().begin();
-        em.persist(foodOfferEntity);
-        em.getTransaction().commit();
-        em.close();
-        
-        this.setId(foodOfferEntity.getId());
-        
-        return this;
-    } 
 
 }

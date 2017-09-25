@@ -1,4 +1,4 @@
-package com.amt.rastenbergerrest.service;
+package com.amt.rastenbergerrest.services;
 
 import com.amt.rastenbergerrest.db.FoodOfferEntity;
 import com.amt.rastenbergerrest.models.FoodOffer;
@@ -13,6 +13,21 @@ public class FoodOfferService {
 
     @Inject
     private EntityManagerFactory factory;
+
+    public FoodOffer createFoodOffer(FoodOffer foodOffer) {
+        EntityManager em = factory.createEntityManager();
+
+        FoodOfferEntity foodOfferEntity = new FoodOfferEntity(foodOffer);
+
+        em.getTransaction().begin();
+        em.persist(foodOfferEntity);
+        em.getTransaction().commit();
+        em.close();
+
+        foodOffer.setId(foodOfferEntity.getId());
+
+        return foodOffer;
+    }
 
     public List<FoodOffer> getFoodOffers() {
         EntityManager em = factory.createEntityManager();
@@ -54,7 +69,7 @@ public class FoodOfferService {
         return foodOffer;
     }
 
-    public FoodOffer deleteFoodOffer(final FoodOffer foodOffer) {
+    public void deleteFoodOffer(final FoodOffer foodOffer) {
         EntityManager em = factory.createEntityManager();
 
         final FoodOfferEntity entity = em.find(
@@ -66,7 +81,7 @@ public class FoodOfferService {
         em.getTransaction().commit();
         em.close();
 
-        return foodOffer;
+        return;
     }
 
 }

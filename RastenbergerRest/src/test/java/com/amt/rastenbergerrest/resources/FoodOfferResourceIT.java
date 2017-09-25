@@ -8,15 +8,14 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import org.apache.http.HttpStatus;
 import static org.hamcrest.Matchers.*;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+
 public class FoodOfferResourceIT {
 
-    private final String webapiPath = "http://localhost:8080/RastenbergerRest/rs";
+    private static final String webapiPath = "http://localhost:8080/RastenbergerRest-0.1/rs";
     private final JsonObject testFoodOffer = Json.createObjectBuilder()
             .add("owner", "Moe Szyslak")
             .add("externalLink", "https://www.google.de")
@@ -25,6 +24,22 @@ public class FoodOfferResourceIT {
 
     @Before
     public void setUp() {
+        final Response foodOffers = get(webapiPath + "/foodoffers");
+        foodOffers.then().statusCode(HttpStatus.SC_OK);
+        final List<Integer> foodOfferIds = foodOffers
+                .body()
+                .jsonPath()
+                .getList("id");
+
+        foodOfferIds.stream().forEach(id -> {
+            delete(webapiPath + "/foodoffers/" + id)
+                    .then()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
+        });
+    }
+
+    @AfterClass
+    public static void cleanup() {
         final Response foodOffers = get(webapiPath + "/foodoffers");
         foodOffers.then().statusCode(HttpStatus.SC_OK);
         final List<Integer> foodOfferIds = foodOffers

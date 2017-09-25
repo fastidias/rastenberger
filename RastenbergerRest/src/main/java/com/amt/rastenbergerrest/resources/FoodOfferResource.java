@@ -1,7 +1,7 @@
 package com.amt.rastenbergerrest.resources;
 
 import com.amt.rastenbergerrest.models.FoodOffer;
-import com.amt.rastenbergerrest.service.FoodOfferService;
+import com.amt.rastenbergerrest.services.FoodOfferService;
 import java.net.URI;
 import java.util.List;
 import javax.inject.Inject;
@@ -37,43 +37,61 @@ public class FoodOfferResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createFoodOffer(@Context UriInfo uriinfo, final FoodOffer foodOffer) {
 
-        foodOffer.saveToDatabase();
-        this.addSelfLink(foodOffer, uriinfo);
+        FoodOffer createdOffer = service.createFoodOffer(foodOffer);
+
+        this.addSelfLink(createdOffer, uriinfo);
 
         final URI addedUri = uriinfo
                 .getAbsolutePathBuilder()
-                .path(Long.toString(foodOffer.getId()))
+                .path(Long.toString(createdOffer.getId()))
                 .build();
 
-        return Response.created(addedUri).entity(foodOffer).build();
+        return Response.created(addedUri).entity(createdOffer).build();
     }
 
     @GET
     @Path("{id}")
-    public FoodOffer getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
-        final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
+    public Response getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
+        final FoodOffer matchingOffer = service.getFoodOfferById(id);
 
-        return this.addSelfLink(matchingFoodOffer, uriinfo);
+        final URI addedUri = uriinfo
+                .getAbsolutePathBuilder()
+                .path(Long.toString(matchingOffer.getId()))
+                .build();
+
+        return Response.created(addedUri).entity(matchingOffer).build();
     }
 
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public FoodOffer updateFoodOffer(
-            @Context UriInfo uriinfo,
-            @PathParam("id") Long id,
-            final FoodOffer foodOffer) {
+    public Response updateFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id, final FoodOffer foodOffer) {
+
         foodOffer.setId(id);
-        return service.updateFoodOffer(foodOffer);
+
+        FoodOffer updatedOffer = service.updateFoodOffer(foodOffer);
+
+        final URI addedUri = uriinfo
+                .getAbsolutePathBuilder()
+                .path(Long.toString(updatedOffer.getId()))
+                .build();
+
+        return Response.created(addedUri).entity(updatedOffer).build();
     }
 
     @DELETE
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void deleteFoodOffer(@PathParam("id") Long id) {
+    public Response deleteFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
         final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
 
         service.deleteFoodOffer(matchingFoodOffer);
+
+        final URI addedUri = uriinfo
+                .getAbsolutePathBuilder()
+                .build();
+
+        return Response.created(addedUri).build();
     }
 
     private List<FoodOffer> addSelfLink(List<FoodOffer> foodOffers, UriInfo uriinfo) {
