@@ -31,6 +31,10 @@ public class FoodOffer {
         links = new ArrayList<>();
     }
 
+    public FoodOffer() {
+        links = new ArrayList<>();
+    }
+
     public String getOwner() {
         return owner;
     }

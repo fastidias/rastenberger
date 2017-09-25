@@ -46,7 +46,7 @@ public class FoodOfferResource {
                 .path(Long.toString(createdOffer.getId()))
                 .build();
 
-        return Response.created(addedUri).entity(createdOffer).build();
+        return Response.created(addedUri).status(Response.Status.CREATED).entity(createdOffer).build();
     }
 
     @GET
@@ -59,7 +59,7 @@ public class FoodOfferResource {
                 .path(Long.toString(matchingOffer.getId()))
                 .build();
 
-        return Response.created(addedUri).entity(matchingOffer).build();
+        return Response.created(addedUri).status(Response.Status.OK).entity(matchingOffer).build();
     }
 
     @PUT
@@ -76,7 +76,7 @@ public class FoodOfferResource {
                 .path(Long.toString(updatedOffer.getId()))
                 .build();
 
-        return Response.created(addedUri).entity(updatedOffer).build();
+        return Response.created(addedUri).status(Response.Status.OK).entity(updatedOffer).build();
     }
 
     @DELETE
@@ -91,7 +91,7 @@ public class FoodOfferResource {
                 .getAbsolutePathBuilder()
                 .build();
 
-        return Response.created(addedUri).build();
+        return Response.created(addedUri).status(Response.Status.NO_CONTENT).build();
     }
 
     private List<FoodOffer> addSelfLink(List<FoodOffer> foodOffers, UriInfo uriinfo) {
