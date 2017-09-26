@@ -13,7 +13,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-public class FoodOfferResourceIT {
+public class FoodOfferIT {
 
     private static final String webapiPath = "http://localhost:8080/RastenbergerRest-0.1/rs";
     private final JsonObject testFoodOffer = Json.createObjectBuilder()
@@ -120,6 +120,24 @@ public class FoodOfferResourceIT {
                 .body("externalLink", equalTo(updateFoodOffer.getString("externalLink")))
                 .body("description", equalTo(updateFoodOffer.getString("description")))
                 .body("links", anything());
+
+        System.out.println("addParticipant");
+
+        final JsonObject participant = Json.createObjectBuilder()
+                .add("firstName", "Ned")
+                .add("lastName", "Flanders")
+                .add("cost", "14")
+                .build();
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(participant.toString())
+                .post(webapiPath + "/foodoffers/" + foodOfferId + "/participants")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("firstName", equalTo(participant.getString("firstName")))
+                .body("lastName", equalTo(participant.getString("lastName")))
+                .body("cost", equalTo(Integer.parseInt(participant.getString("cost"))));
     }
 
     private Long createFoodOffer(JsonObject foodOffer) {

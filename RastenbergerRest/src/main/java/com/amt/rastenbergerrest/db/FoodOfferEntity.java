@@ -2,15 +2,11 @@ package com.amt.rastenbergerrest.db;
 
 import com.amt.rastenbergerrest.models.FoodOffer;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class FoodOfferEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,9 +18,9 @@ public class FoodOfferEntity implements Serializable {
     }
 
     public FoodOfferEntity(FoodOffer foodoffer) {
-        this.owner = foodoffer.getOwner();
-        this.externalLink = foodoffer.getExternalLink();
-        this.description = foodoffer.getDescription();
+        this.owner          = foodoffer.getOwner();
+        this.externalLink   = foodoffer.getExternalLink();
+        this.description    = foodoffer.getDescription();
     }
     
     public String getOwner() {

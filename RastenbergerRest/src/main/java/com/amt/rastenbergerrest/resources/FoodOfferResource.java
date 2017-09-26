@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Path("foodoffers")
+@Path("/foodoffers")
 @Produces(MediaType.APPLICATION_JSON)
 public class FoodOfferResource {
 
@@ -50,9 +50,9 @@ public class FoodOfferResource {
     }
 
     @GET
-    @Path("{id}")
-    public Response getFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
-        final FoodOffer matchingOffer = service.getFoodOfferById(id);
+    @Path("{offerId}")
+    public Response getFoodOffer(@Context UriInfo uriinfo, @PathParam("offerId") Long offerId) {
+        final FoodOffer matchingOffer = service.getFoodOfferById(offerId);
 
         final URI addedUri = uriinfo
                 .getAbsolutePathBuilder()
@@ -63,11 +63,11 @@ public class FoodOfferResource {
     }
 
     @PUT
-    @Path("{id}")
+    @Path("{offerId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id, final FoodOffer foodOffer) {
+    public Response updateFoodOffer(@Context UriInfo uriinfo, @PathParam("offerId") Long offerId, final FoodOffer foodOffer) {
 
-        foodOffer.setId(id);
+        foodOffer.setId(offerId);
 
         FoodOffer updatedOffer = service.updateFoodOffer(foodOffer);
 
@@ -80,10 +80,10 @@ public class FoodOfferResource {
     }
 
     @DELETE
-    @Path("{id}")
+    @Path("{offerId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteFoodOffer(@Context UriInfo uriinfo, @PathParam("id") Long id) {
-        final FoodOffer matchingFoodOffer = service.getFoodOfferById(id);
+    public Response deleteFoodOffer(@Context UriInfo uriinfo, @PathParam("offerId") Long offerId) {
+        final FoodOffer matchingFoodOffer = service.getFoodOfferById(offerId);
 
         service.deleteFoodOffer(matchingFoodOffer);
 
@@ -93,6 +93,13 @@ public class FoodOfferResource {
 
         return Response.created(addedUri).status(Response.Status.NO_CONTENT).build();
     }
+
+    // Add sub resource
+    @Path("{offerId}/participants")
+    public ParticipantResource getParticipantResource() {
+        return new ParticipantResource();
+    }
+
 
     private List<FoodOffer> addSelfLink(List<FoodOffer> foodOffers, UriInfo uriinfo) {
         foodOffers.forEach((foodOffer) -> {
