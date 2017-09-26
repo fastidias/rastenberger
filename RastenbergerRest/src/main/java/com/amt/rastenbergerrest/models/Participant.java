@@ -10,25 +10,36 @@ public class Participant {
     private Long id;
     private String firstName;
     private String lastName;
+    private String comment;
 
     // TODO: Make me money :)
-    private Integer cost;
+    private Integer amount;
 
     public Participant(ParticipantEntity participantEntity) {
         this.id         = participantEntity.getId();
         this.firstName  = participantEntity.getFirstName();
         this.lastName   = participantEntity.getLastName();
-        this.cost       = participantEntity.getCost();
+        this.amount     = participantEntity.getAmount();
+        this.comment    = participantEntity.getComment();
     }
 
-    public Participant(String firstName, String lastName, Integer cost, Long id) {
+    public Participant(String firstName, String lastName, Integer amount, String comment, Long id) {
         this.firstName  = firstName;
-        this.lastName = lastName;
-        this.cost       = cost;
+        this.lastName   = lastName;
+        this.amount     = amount;
+        this.comment    = comment;
         this.id         = id;
     }
 
     public Participant() {
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -47,12 +58,12 @@ public class Participant {
         this.lastName = lastName;
     }
 
-    public Integer getCost() {
-        return cost;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setCost(Integer cost) {
-        this.cost = cost;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 
     public String getFirstName() {

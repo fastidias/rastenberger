@@ -13,15 +13,25 @@ public class ParticipantEntity implements Serializable {
     private Long id;
     private String firstName;
     private String LastName;
-    private Integer cost;
+    private Integer amount;
+    private String comment;
 
     public ParticipantEntity(Participant participant) {
         this.firstName  = participant.getFirstName();
         this.LastName   = participant.getLastName();
-        this.cost = participant.getCost();
+        this.amount     = participant.getAmount();
+        this.comment    = participant.getComment();
     }
 
     public ParticipantEntity() {
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -40,12 +50,12 @@ public class ParticipantEntity implements Serializable {
         LastName = lastName;
     }
 
-    public Integer getCost() {
-        return cost;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setCost(Integer price) {
-        this.cost = price;
+    public void setAmount(Integer price) {
+        this.amount = price;
     }
 
     public String getFirstName() {

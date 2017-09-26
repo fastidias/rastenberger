@@ -126,7 +126,8 @@ public class FoodOfferIT {
         final JsonObject participant = Json.createObjectBuilder()
                 .add("firstName", "Ned")
                 .add("lastName", "Flanders")
-                .add("cost", "14")
+                .add("amount", 14)
+                .add("comment","donuts ....")
                 .build();
 
         given()
@@ -137,7 +138,8 @@ public class FoodOfferIT {
                 .statusCode(HttpStatus.SC_OK)
                 .body("firstName", equalTo(participant.getString("firstName")))
                 .body("lastName", equalTo(participant.getString("lastName")))
-                .body("cost", equalTo(Integer.parseInt(participant.getString("cost"))));
+                .body("amount", equalTo(participant.getInt("amount")))
+                .body("comment",equalTo(participant.getString("comment")));
     }
 
     private Long createFoodOffer(JsonObject foodOffer) {
