@@ -6,13 +6,15 @@ import com.amt.rastenbergerrest.services.ParticipantService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import javax.inject.Inject;
 
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
 public class ParticipantResource {
 
     // TODO: use injection
-    private ParticipantService service = new ParticipantService();
+    @Inject
+    private ParticipantService service;
 
     @GET
     public List<Participant> getParticipants() {

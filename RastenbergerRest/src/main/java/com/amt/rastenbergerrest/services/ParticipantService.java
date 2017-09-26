@@ -3,14 +3,17 @@ package com.amt.rastenbergerrest.services;
 import com.amt.rastenbergerrest.db.EntityManagerFactoryProvider;
 import com.amt.rastenbergerrest.db.ParticipantEntity;
 import com.amt.rastenbergerrest.models.Participant;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+@RequestScoped
 public class ParticipantService {
 
-    // TODO: use injection
-    private EntityManagerFactory factory = new EntityManagerFactoryProvider().getEntityManagerFactory();
+    @Inject
+    private EntityManagerFactory factory;
 
     public Participant createParticipant(Participant participant) {
         EntityManager em = factory.createEntityManager();
