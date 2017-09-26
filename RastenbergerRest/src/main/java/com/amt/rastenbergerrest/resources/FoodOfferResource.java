@@ -24,6 +24,8 @@ public class FoodOfferResource {
 
     @Inject
     private FoodOfferService service;
+    @Inject
+    private ParticipantResource participantResource;
 
     // For methods as additional params there are @QueryParams("foodOfferTest")
     @GET
@@ -95,9 +97,11 @@ public class FoodOfferResource {
     }
 
     // Add sub resource
+
     @Path("{offerId}/participants")
     public ParticipantResource getParticipantResource() {
-        return new ParticipantResource();
+
+        return participantResource;
     }
 
 
