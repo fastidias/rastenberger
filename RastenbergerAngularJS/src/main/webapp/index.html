@@ -4,17 +4,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="angular.min.js"></script>
         <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="foodoffers.js"></script>
     </head>
-    <body class="list-group" ng-controller="FoodofferController as foodofferCtrl">
+    <body class="list-group">
         <header>
             <h1 class="text-center">Rastenberger</h1>
             <h2 class="text-center">- Powered by AngularJS -</h2>
         </header>
-        <div class="list-group-item" ng-repeat="product in foodofferCtrl.foodoffers">
-            <hr/>
-            <h3>{{product.description}}</h3>
-            <h4>{{product.externalLink}}</h4>
-            <h4>{{product.owner}}</h4>
-        </div>
+        <foodoffer-list></foodoffer-list>
     </body>
 </html>
