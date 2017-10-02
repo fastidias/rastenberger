@@ -1,6 +1,7 @@
 {
     "elements": {
-        "foodoffer-list": {}
+        "foodoffer-list": {},
+        "foodoffer-form": {}
     },
     "attributes": {}
 }
