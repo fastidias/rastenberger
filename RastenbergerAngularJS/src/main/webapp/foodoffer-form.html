@@ -1,0 +1,13 @@
+<hr>
+<form ng-submit="foodofferFormCtrl.submitFoodoffer()">
+    <h2>Create a Foodoffer</h2>
+
+    <p>Description</p>
+    <input type="text" ng-model="foodofferFormCtrl.foodoffer.description" />
+    <p>External link</p>
+    <input type="text" ng-model="foodofferFormCtrl.foodoffer.externalLink" />
+    <p>Owner</p>
+    <input type="text" ng-model="foodofferFormCtrl.foodoffer.owner" />
+
+    <input type="submit" value="Submit Foodoffer" />
+</form>
